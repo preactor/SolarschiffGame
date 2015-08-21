@@ -14,6 +14,7 @@ enum zielPos {UP,DOWN,LEFT,RIGHT};
 var pos : zielPos;
 
 //testSDA
+//BLIBLA
 
 //Screenspace-Berechnungen
 //Ortsvektoren UL = UpperLeft, LL = LowerLeft, usw.
