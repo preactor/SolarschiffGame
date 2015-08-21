@@ -13,9 +13,6 @@ var compassScreenPos : Vector2;
 enum zielPos {UP,DOWN,LEFT,RIGHT};
 var pos : zielPos;
 
-//testSDA
-//BLIBLA
-
 //Screenspace-Berechnungen
 //Ortsvektoren UL = UpperLeft, LL = LowerLeft, usw.
 var scrPointUL : Vector2;
@@ -148,7 +145,6 @@ function Update () {
 	//print("RIGHT" + rIPClamped);
 	//print("ShipPos" + schiffA);
 	//print("TargetPos" + zielB);
-
 	targetIsVisible = ziel.GetComponent.<Renderer>().isVisible;
 	if(targetIsVisible){
 		compass.GetComponent.<Renderer>().enabled = false;
