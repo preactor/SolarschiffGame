@@ -231,3 +231,11 @@ pip-log.txt
 *.unityproj
 *.csproj
 *.sln
+/Assets/Assembly-CSharp-Editor.pidb
+/Assets/Assembly-CSharp-Editor.pidb.meta
+/Assets/Assembly-CSharp-firstpass.pidb
+/Assets/Assembly-CSharp-firstpass.pidb.meta
+/Assets/Assembly-UnityScript.pidb
+/Assets/Assembly-UnityScript.pidb.meta
+/Assets/Assembly-UnityScript-firstpass.pidb
+/Assets/Assembly-UnityScript-firstpass.pidb.meta
