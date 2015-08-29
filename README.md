@@ -1,4 +1,2 @@
 # SolarschiffGame
 
-
-Testestest
