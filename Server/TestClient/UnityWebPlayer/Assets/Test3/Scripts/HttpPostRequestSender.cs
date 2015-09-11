@@ -6,12 +6,12 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace Scene2
+namespace Scene3
 {
 	public class HttpPostRequestSender: MonoBehaviour {
 
 		// endpoint to send the message to
-		private const string endpointUrl = "http://localhost:5723/HandleEncryptedPostRequest.php";
+		private const string endpointUrl = "http://localhost:5723/HandleEncryptedJsonPostRequest.php";
 
 		// scroll view vector
 		private Vector2 scrollViewVector = Vector2.zero;
@@ -42,16 +42,21 @@ namespace Scene2
 			GUI.EndScrollView ();
 		}
 
-		private string GenerateMessage()
+		private string CreateMessage()
 		{
-			string message = "confidential";
+			string firstName = "Hans";
+			string lastName = "Mustermann";
+			string email = "hans@web.de";
+			long highScore = 12345;
 
-			return message;
+			string json = string.Format("{{\"firstName\": \"{0}\", \"lastName\": \"{1}\", \"email\": \"{2}\", \"highScore\": {3}}}", firstName, lastName, email, highScore.ToString());
+
+			return json;
 		}
 
 		IEnumerator SendEncryptedRequest()
 		{	
-			var message = GenerateMessage (); 
+			var message = CreateMessage (); 
 
 			// debug
 			Debug.Log ("bytes of key: " + StringHelper.GetBytesAsString (passwordBytes));
@@ -64,7 +69,7 @@ namespace Scene2
 
 			// append encrypted message and iv
 			var bytesToSend = new List<byte> ();
-			bytesToSend.AddRange (encryptedMessage);		
+			bytesToSend.AddRange (encryptedMessage);	
 			bytesToSend.AddRange (rijndaelIv); 
 
 			// debug

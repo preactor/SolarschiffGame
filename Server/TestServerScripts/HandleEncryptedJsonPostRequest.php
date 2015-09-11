@@ -17,12 +17,20 @@
 				
 				// decrypt
 				$decryptedContent = EncryptionHelper::decryptMessage($decodedContent, $passwordBytes);
+				$decryptedContent = StringHelper::untilLastOccurence($decryptedContent, '}');
+				
+				// json decodes
+				$highscoreData = json_decode($decryptedContent);  
 				
 				// debug
+				echo 'first name: ' . $highscoreData->firstName . '<br>';
+				echo 'last name: ' . $highscoreData->lastName . '<br>';	
+				echo 'email: ' . $highscoreData->email . '<br>';	
+				echo 'highScore: ' . $highscoreData->highScore . '<br>';
 				echo 'bytes after decryption: ' . StringHelper::getStringBytesAsString($decryptedContent) . '<br>';				
 							
 				// log 
-				$filename = 'log2.txt';
+				$filename = 'log3.txt';
 				$myfile = fopen($filename, 'a') or die('Unable to open log file, sorry!');
 				$store_line = $_SERVER['REMOTE_ADDR'] . ': ' . $decryptedContent . PHP_EOL; 
 				fwrite($myfile, $store_line);
