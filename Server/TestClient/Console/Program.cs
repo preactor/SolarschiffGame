@@ -9,17 +9,25 @@ namespace TestClient
     {
         private static void Main(string[] args)
         {
-            EncryptionTest(args);
+            //EncryptionTest(args);
+
+            SimplifiedEncryptionTest(args);
+
         }
-        // encrypt and decrypt messages
-        private static void EncryptionTest(string[] args)
+
+        // simplified, without rfc2898derivedbytes
+        private static void SimplifiedEncryptionTest(string[] args)
         {
             const string message = "Here is some data to encrypt!";
-            const string password = "password";
 
-            // get derived password bytes
-            var salt = new byte[] { 18, 1, 25, 4, 13, 22, 9, 11 };
-            var keyBytes = CreateDerivedPasswordBytes(password, salt);
+            // set password bytes
+            var keyBytes = new byte[]
+            {
+                1, 2, 3, 4, 5, 6, 7, 8,
+                9, 10, 11, 12, 13, 14, 15, 16,
+                17, 18, 19, 20, 21, 22, 23, 24,
+                25, 26, 27, 28, 29, 30, 31, 32
+            };
 
             // get init. vector
             var rijndaelIv = CreateRijndaelIv();
@@ -36,6 +44,33 @@ namespace TestClient
             Console.ReadLine();
         }
 
+        // encrypt and decrypt messages
+        private static void EncryptionTest(string[] args)
+        {
+            const string message = "Here is some data to encrypt!";
+            const string password = "password";
+
+            // get derived password bytes
+            var salt = new byte[] { 18, 1, 25, 4, 13, 22, 9, 11 };
+            var keyBytes = CreateDerivedPasswordBytes(password, salt);
+
+
+            // get init. vector
+            var rijndaelIv = CreateRijndaelIv();
+
+            // Encrypt 
+            byte[] encrypted = EncryptStringToBytes(message, keyBytes, rijndaelIv);
+
+            // Decrypt
+            string roundtrip = DecryptStringFromBytes(encrypted, keyBytes, rijndaelIv);
+
+            //Display the original data and the decrypted data.
+            Console.WriteLine("before encryption:   {0}", message);
+            Console.WriteLine("after decryption: {0}", roundtrip);
+            Console.ReadLine();
+        }
+
+		// create Rijndael initialization vector
         private static byte[] CreateRijndaelIv()
         {
             byte[] rijndaelIv;    

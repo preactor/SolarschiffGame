@@ -5,10 +5,10 @@
 		{
 			echo 'content=' . $_POST['content'];
 			
-			$filename = 'log1.txt';
+			$filename = 'store1.txt';
 			$myfile = fopen($filename, 'a') or die('Unable to open log file, sorry!');
-			$log_line = $_SERVER['REMOTE_ADDR'] . ': ' . $_POST['content'] . PHP_EOL; 
-			fwrite($myfile, $log_line);
+			$store_line = $_SERVER['REMOTE_ADDR'] . ': ' . $_POST['content'] . PHP_EOL; 
+			fwrite($myfile, $store_line);
 			fclose($myfile);
 			
 			echo '<br>Check the file ' . $filename . '!';

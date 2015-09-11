@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\HttpPostRequestSender.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Test2\Scripts\HttpPostRequestSender.cs">
     <Files>
-      <File FileName="Assets\Scripts\HttpPostRequestSender.cs" Line="29" Column="4" />
+      <File FileName="Assets\Test2\Scripts\HttpPostRequestSender.cs" Line="30" Column="9" />
+      <File FileName="Assets\Test2\Scripts\EncryptionHelper.cs" Line="44" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
