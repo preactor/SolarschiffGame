@@ -1,5 +1,6 @@
+<!--Copy this file to TestDatabaseConfiguration.php locally and adjust the data in the copy-->
+
 <?php
-a
 $databaseName = 'solarschiff_dev';
 $databaseUserName = 'solarschiff_dev';
 $databaseUserPassword = null; 				// insert the correct password here manually
