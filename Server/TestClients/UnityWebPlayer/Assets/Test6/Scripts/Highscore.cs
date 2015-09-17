@@ -129,6 +129,7 @@ namespace Scene6
 		// deserialize received json string to highscore entry model (without email for security)
 		private void Deserialize(string json)
 		{
+			LastReceivedHighscoreEntries.Clear ();
 			List<object> objectsRaw = (List<object>)Json.Deserialize (json);
 
 			if (objectsRaw != null)
