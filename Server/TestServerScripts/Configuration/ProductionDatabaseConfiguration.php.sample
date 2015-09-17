@@ -1,0 +1,11 @@
+<?php
+	/* Copy this file to TestDatabaseConfiguration.php locally and adjust the data in the copy */
+
+	class DatabaseConfiguration
+	{
+		public static $databaseName = null;
+		public static $databaseUserName = null;
+		public static $databaseUserPassword = null; 				
+		public static $databaseHost = null;
+	}
+?>

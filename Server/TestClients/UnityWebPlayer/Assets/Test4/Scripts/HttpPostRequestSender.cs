@@ -6,12 +6,19 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace Scene3
+namespace Scene4
 {
 	public class HttpPostRequestSender: MonoBehaviour {
 
+		// Data to insert into highscore
+		public string LastName = "Mueller";
+		public string FirstName = "Peter";
+		public string DisplayName = "pm1234";
+		public string Email = "pm@web.de";
+		public long Score = 42;
+
 		// endpoint to send the message to
-		private const string endpointUrl = "http://localhost:5723/HandleEncryptedJsonPostRequest.php";
+		private const string endpointUrl = "http://localhost:5723/InsertHighscoreEntry.php";
 
 		// scroll view vector
 		private Vector2 scrollViewVector = Vector2.zero;
@@ -44,14 +51,8 @@ namespace Scene3
 
 		private string CreateMessage()
 		{
-			string lastName = "Mustermann";
-			string firstName = "Hans";
-			string displayName = "hansm82";
-			string email = "hans@web.de";
-			long score = 12345;
-
 			string json = string.Format("{{\"LastName\": \"{0}\", \"FirstName\": \"{1}\" , \"DisplayName\": \"{2}\", \"Email\": \"{3}\", \"Score\": {4}}}", 
-			                            lastName, firstName, displayName, email, score.ToString());
+			                            LastName, FirstName, DisplayName, Email, Score.ToString());
 
 			return json;
 		}
