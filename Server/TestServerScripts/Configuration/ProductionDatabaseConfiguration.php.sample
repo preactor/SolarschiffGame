@@ -1,5 +1,5 @@
 <?php
-	/* Copy this file to TestDatabaseConfiguration.php locally and adjust the data in the copy */
+	/* Copy this file to ProductionDatabaseConfiguration.php locally and adjust the data in the copy */
 
 	class DatabaseConfiguration
 	{
