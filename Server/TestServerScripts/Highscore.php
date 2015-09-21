@@ -24,15 +24,37 @@
 		public function get($numberOfEntries) 
 		{
 			$json = null;
-			
+							
 			// query and pack data
-			$query = "SELECT LastName, FirstName, DisplayName, Score FROM Highscore ORDER BY Score DESC limit " . $numberOfEntries;
+			$query = "SELECT LastName, FirstName, DisplayName, Score FROM Highscore ORDER BY Score DESC LIMIT " . $numberOfEntries;
 			if ($result = $this->mysqli->query($query)) 
 			{
 				$results = array();
 				while ($row = $result->fetch_row()) 
 				{
 					$results[] = array ('LastName' => $row[0], 'FirstName' => $row[1], 'DisplayName' => $row[2], 'Score' => $row[3]);
+				}
+				$json = json_encode($results);
+				
+				$result->close();
+			}
+			
+			return $json;
+		}
+		
+		public function getRaw()
+		{
+			$json = null;
+							
+			// query and pack data
+			$query = "SELECT LastName, FirstName, DisplayName, Email, Score, ConfirmationStatus FROM Highscore ORDER BY Score DESC";
+			if ($result = $this->mysqli->query($query)) 
+			{
+				$results = array();
+				while ($row = $result->fetch_row()) 
+				{
+					$results[] = array ('LastName' => $row[0], 'FirstName' => $row[1], 'DisplayName' => $row[2], 'Email' => $row[3],
+										'Score' => $row[4], 'ConfirmationStatus' => $row[5]);
 				}
 				$json = json_encode($results);
 				
