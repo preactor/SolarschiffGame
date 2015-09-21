@@ -32,25 +32,28 @@ namespace Scene6
 		public List<HighscoreEntryModel> LastReceivedHighscoreEntries = new List<HighscoreEntryModel>();
 
 		// endpoint to receive message from
-		private const string getUrl = "http://localhost:5723/GetHighscoreEntries.php";
+		//private const string getUrl = "http://localhost:5723/GetHighscoreEntries.php";
+		private string highscoreGetUrl = HighscoreConfiguration.UrlGet;
 
 		// endpoint to send the message to
-		private const string publishUrl = "http://localhost:5723/InsertHighscoreEntry.php";
+		//private const string publishUrl = "http://localhost:5723/InsertHighscoreEntry.php";
+		private string highscoreInsertUrl = HighscoreConfiguration.UrlInsert;
 
 		// password for AES-256 encryption
-		private static readonly byte [] passwordBytes = new byte[]
+		/*private static readonly byte [] passwordBytes = new byte[]
 		{
 			1, 2, 3, 4, 5, 6, 7, 8,
 			9, 10, 11, 12, 13, 14, 15, 16,
 			17, 18, 19, 20, 21, 22, 23, 24,
 			25, 26, 27, 28, 29, 30, 31, 32
-		};
+		};*/
+		private static readonly byte [] highscorePasswordBytes = HighscoreConfiguration.PasswordBytes;
 
 		// get highscore entries
 		public IEnumerator GetEntries()
 		{	 
 			// request data
-			WWW www = new WWW(getUrl);
+			WWW www = new WWW(highscoreGetUrl);
 			ReceiveState = HighscoreState.Wait;
 			yield return www;
 
@@ -76,7 +79,7 @@ namespace Scene6
 			var message = Serialize (model); 
 
 			// encrypt message
-			var encryptionResult = EncryptionHelper.EncryptMessage (message, passwordBytes);
+			var encryptionResult = EncryptionHelper.EncryptMessage (message, highscorePasswordBytes);
 			var encryptedMessage = encryptionResult.EncryptedMessage;
 			var rijndaelIv = encryptionResult.RijndaelIv;
 			
@@ -89,7 +92,7 @@ namespace Scene6
 			var bytesToSendBase64 = System.Convert.ToBase64String (bytesToSend.ToArray ());
 			WWWForm form = new WWWForm();
 			form.AddField("content", bytesToSendBase64);
-			WWW www = new WWW(publishUrl, form);
+			WWW www = new WWW(highscoreInsertUrl, form);
 			SendState = HighscoreState.Wait;
 			yield return www;
 			

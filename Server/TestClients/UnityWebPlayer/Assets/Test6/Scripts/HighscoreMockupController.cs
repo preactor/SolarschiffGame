@@ -25,19 +25,12 @@ namespace Scene6
 		// score to insert
 		private string scoreToInsert = "1234";
 
-		// state of sending 
-		private string sendState = "state: reaady to send";
-
-		// message to show in scroll view 
-		private string receiveState = "state: ready to receive"; 
-
 		void OnGUI()
 		{
 			// button get highscore
 			if (GUI.Button (new Rect (10, 10, 200, 50), "Receive Highscore")) 
 			{
 				StartCoroutine(highscore.GetEntries());
-				receiveState = "Please wait ...";
 			}
 
 			// button insert highscore
@@ -52,7 +45,6 @@ namespace Scene6
 				model.Score = long.Parse(scoreToInsert);
 
 				StartCoroutine(highscore.PublishEntry(model));
-				sendState = "Please wait ...";
 			}
 
 			// get receive message to display
