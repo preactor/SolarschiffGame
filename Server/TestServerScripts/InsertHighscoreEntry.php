@@ -3,6 +3,7 @@
 	include_once 'StringHelper.php';
 	include_once 'Highscore.php';
 	include_once 'Configuration\DatabaseConfiguration.php';
+	include_once 'Configuration\HighscoreConfiguration.php';
 	
 	function main() 
 	{	
@@ -11,7 +12,8 @@
 			if (array_key_exists('content', $_POST))
 			{	
 				// define password bytes
-				$passwordBytes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32);
+				//$passwordBytes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32);
+				$passwordBytes = HighscoreConfiguration::$aesPasswordBytes;
 				
 				// decode 
 				$content = $_POST['content'];
