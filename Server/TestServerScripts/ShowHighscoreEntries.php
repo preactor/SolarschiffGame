@@ -11,9 +11,6 @@
 		
 		// unpack
 		$highscoreArray = json_decode($json);
-
-		//
-		//echo $json;
 		
 		// show
 		echo '<b>Last Name - First Name - DisplayName - Email - Score - ConfirmationStatus (0 = not confirmed, 1 = confirmed)</b><br>';
