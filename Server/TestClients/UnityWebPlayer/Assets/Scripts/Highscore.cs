@@ -33,11 +33,11 @@ namespace Test1
 
 		// endpoint to receive message from
 		//private const string getUrl = "http://localhost:5723/GetHighscoreEntries.php";
-		private string highscoreGetUrl = HighscoreConfiguration.UrlGet;
+		private string highscoreGetUrl = Configuration.UrlGet;
 
 		// endpoint to send the message to
 		//private const string publishUrl = "http://localhost:5723/InsertHighscoreEntry.php";
-		private string highscoreInsertUrl = HighscoreConfiguration.UrlInsert;
+		private string highscoreInsertUrl = Configuration.UrlInsert;
 
 		// password for AES-256 encryption
 		/*private static readonly byte [] passwordBytes = new byte[]
@@ -47,7 +47,7 @@ namespace Test1
 			17, 18, 19, 20, 21, 22, 23, 24,
 			25, 26, 27, 28, 29, 30, 31, 32
 		};*/
-		private static readonly byte [] highscorePasswordBytes = HighscoreConfiguration.PasswordBytes;
+		private static readonly byte [] highscorePasswordBytes = Configuration.PasswordBytes;
 
 		// get highscore entries
 		public IEnumerator GetEntries()
