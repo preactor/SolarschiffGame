@@ -78,13 +78,11 @@ public class HighscoreMockupController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-			
+		Debug.Log ("Press H to show/hide the highscore mockup");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log ("Press H to show/hide the highscore mockup");
-
 		if (Input.GetKeyDown (KeyCode.H)) 
 		{
 			isVisible = !isVisible;

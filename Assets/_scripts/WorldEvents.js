@@ -31,7 +31,7 @@ function Start () {
 	//=========================================//
 
 	solarPivotObj = gameObject.FindGameObjectsWithTag("solarPivotBox");
-	print(solarPivotObj);
+	//print(solarPivotObj);
 	boxCount = solarPivotObj.length;
 	//print(boxCount);
 	for(var i = 0; i < boxCount; i++){
