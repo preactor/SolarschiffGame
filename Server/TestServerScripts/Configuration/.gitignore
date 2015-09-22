@@ -1,3 +1,4 @@
 /TestDatabaseConfiguration.php
 /ProductionDatabaseConfiguration.php
-/HighscoreConfiguration.php
+/ConfidentialApplicationConfiguration.php
+/ConfidentialConfiguration.php

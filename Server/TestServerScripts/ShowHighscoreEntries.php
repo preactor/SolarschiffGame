@@ -1,12 +1,13 @@
 <?php
-	include_once 'Configuration\DatabaseConfiguration.php';
+	include_once 'Configuration\ConfidentialConfiguration.php';
 	include_once 'Highscore.php';
 	
 	function main()
 	{
 		// get highscore json
-		$highscore = new Highscore(	DatabaseConfiguration::$databaseHost, DatabaseConfiguration::$databaseUserName, 
-							DatabaseConfiguration::$databaseUserPassword, DatabaseConfiguration::$databaseName);
+		$config = ConfidentialConfiguration::getDatabaseConfiguration();
+		$highscore = new Highscore(	$config->databaseHost, $config->databaseUserName, 
+							$config->databaseUserPassword, $config->databaseName);
 		$json = $highscore->getRaw();
 		
 		// unpack

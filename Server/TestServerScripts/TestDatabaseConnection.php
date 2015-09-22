@@ -1,8 +1,9 @@
 <?php
-	include_once 'Configuration\DatabaseConfiguration.php';
+	include_once 'Configuration\ConfidentialConfiguration.php';
 	
 	// Create connection
-	$conn = new mysqli(DatabaseConfiguration::$databaseHost, DatabaseConfiguration::$databaseUserName, DatabaseConfiguration::$databaseUserPassword);
+	$config = ConfidentialConfiguration::getDatabaseConfiguration();
+	$conn = new mysqli($config->databaseHost, $config->databaseUserName, $config->databaseUserPassword);
 
 	// Check connection
 	if ($conn->connect_error) {

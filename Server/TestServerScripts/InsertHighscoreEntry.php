@@ -2,8 +2,8 @@
 	include_once 'EncryptionHelper.php';
 	include_once 'StringHelper.php';
 	include_once 'Highscore.php';
-	include_once 'Configuration\DatabaseConfiguration.php';
-	include_once 'Configuration\HighscoreConfiguration.php';
+	include_once 'Configuration\ConfidentialConfiguration.php';
+	include_once 'Configuration\Configuration.php';
 	
 	function main() 
 	{	
@@ -13,7 +13,7 @@
 			{	
 				// define password bytes
 				//$passwordBytes = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32);
-				$passwordBytes = HighscoreConfiguration::$aesPasswordBytes;
+				$passwordBytes = Configuration::$aesPasswordBytes;
 				
 				// decode 
 				$content = $_POST['content'];
@@ -35,8 +35,9 @@
 				echo 'bytes after decryption: ' . StringHelper::getStringBytesAsString($decryptedContent) . '<br>';				
 							
 				// store
-				$highscore = new Highscore(	DatabaseConfiguration::$databaseHost, DatabaseConfiguration::$databaseUserName, 
-											DatabaseConfiguration::$databaseUserPassword, DatabaseConfiguration::$databaseName);
+				$config = ConfidentialConfiguration::getDatabaseConfiguration();
+				$highscore = new Highscore(	$config->databaseHost, $config->databaseUserName, 
+									$config->databaseUserPassword, $config->databaseName);
 				$highscore->insert($highscoreData);
 			}
 			else

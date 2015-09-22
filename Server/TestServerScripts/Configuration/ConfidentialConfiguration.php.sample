@@ -1,0 +1,40 @@
+<?php
+	/* COPY THIS FILE LOCALLY TO ConfidentialConfiguration.php AND ADJUST THE VALUES IN THE COPY LOCALLY */
+	
+	include_once ('Configuration.php');
+	
+	class DatabaseConfiguration
+	{
+		public $databaseName;
+		public $databaseUserName;
+		public $databaseUserPassword;
+		public $databaseHost;
+	}
+	
+	class ConfidentialConfiguration
+	{		
+		public static function getDatabaseConfiguration()
+		{
+			$res = new DatabaseConfiguration();
+			
+			if (Configuration::$environment == EnvironmentType::Test)
+			{
+				$res->databaseName = 'solarschiff_dev';				
+				$res->databaseUserName = 'solarschiff_dev';
+				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE		
+				$res->databaseHost = 'db4free.net';	
+				return $res;
+			}
+			else if (Configuration::$environnment == EnvironmentType::Production)
+			{
+				$res->databaseName = 'confidential';					// ADJUST VALUE
+				$res->databaseUserName = 'confidential';				// ADJUST VALUE
+				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE
+				$res->databaseHost = 'confidential';					// ADJUST VALUE
+			}
+			
+			return $res;
+		}
+	}
+
+?>
