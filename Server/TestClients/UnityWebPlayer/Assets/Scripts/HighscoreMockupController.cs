@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace Scene6
+namespace Test1
 {
 	public class HighscoreMockupController : MonoBehaviour {
 		// Highscore interface

@@ -7,7 +7,7 @@ using System.Text;
 using System.Security.Cryptography;
 using MiniJSON;
 
-namespace Scene6
+namespace Test1
 {
 	public enum HighscoreState
 	{
