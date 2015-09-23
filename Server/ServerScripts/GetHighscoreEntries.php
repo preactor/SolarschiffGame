@@ -7,7 +7,7 @@
 		$config = ConfidentialConfiguration::getDatabaseConfiguration();
 		$highscore = new Highscore(	$config->databaseHost,$config->databaseUserName, 
 							$config->databaseUserPassword, $config->databaseName);
-		$json = $highscore->get(5);
+		$json = $highscore->get();
 		echo $json;
 	}
 	

@@ -9,9 +9,21 @@ using MiniJSON;
 
 namespace Test1
 {
-	public enum HighscoreState
+	public enum HighscoreTransmissionState
 	{
-		Idle, Wait, Success, Failed
+		Idle, Wait, Success, Warning, Error
+	}
+
+	public enum ServerResponseState
+	{
+		Success, Warning, Error
+	}
+
+ 	class ServerResponse
+	{
+		public ServerResponseState State;
+
+		public string Message;
 	}
 
 	public class Highscore {
@@ -23,30 +35,24 @@ namespace Test1
 		public string LastPublishHttpError = null;
 
 		// currently sending highscore
-		public HighscoreState SendState = HighscoreState.Idle;
+		public HighscoreTransmissionState SendState = HighscoreTransmissionState.Idle;
 
 		// currently receiving highscore
-		public HighscoreState ReceiveState = HighscoreState.Idle;
-		
+		public HighscoreTransmissionState ReceiveState = HighscoreTransmissionState.Idle;
+
+		// last highscore message
+		public string LastMessage = string.Empty;
+
 		// last highscore list received from php script
 		public List<HighscoreEntryModel> LastReceivedHighscoreEntries = new List<HighscoreEntryModel>();
 
 		// endpoint to receive message from
-		//private const string getUrl = "http://localhost:5723/GetHighscoreEntries.php";
 		private string highscoreGetUrl = Configuration.UrlGet;
 
 		// endpoint to send the message to
-		//private const string publishUrl = "http://localhost:5723/InsertHighscoreEntry.php";
 		private string highscoreInsertUrl = Configuration.UrlInsert;
 
 		// password for AES-256 encryption
-		/*private static readonly byte [] passwordBytes = new byte[]
-		{
-			1, 2, 3, 4, 5, 6, 7, 8,
-			9, 10, 11, 12, 13, 14, 15, 16,
-			17, 18, 19, 20, 21, 22, 23, 24,
-			25, 26, 27, 28, 29, 30, 31, 32
-		};*/
 		private static readonly byte [] highscorePasswordBytes = Configuration.PasswordBytes;
 
 		// get highscore entries
@@ -54,24 +60,22 @@ namespace Test1
 		{	 
 			// request data
 			WWW www = new WWW(highscoreGetUrl);
-			ReceiveState = HighscoreState.Wait;
+			ReceiveState = HighscoreTransmissionState.Wait;
 			yield return www;
 
 			// get json response
 			string json = null;
 			LastGetHttpError = null;
 			if (string.IsNullOrEmpty (www.error)) {
-				Debug.Log ("answer: " + www.text);
 				json = www.text;
-				ReceiveState = HighscoreState.Success;
+				ReceiveState = HighscoreTransmissionState.Success;
 			} else {
-				Debug.Log ("Epic fail: " + www.error);
 				LastGetHttpError = "error: " + www.error;
-				ReceiveState = HighscoreState.Failed;
+				ReceiveState = HighscoreTransmissionState.Error;
 			}
 
 			// deserialize json response
-			Deserialize (json);
+			DeserializeModels (json);
 		}
 
 		public IEnumerator PublishEntry(HighscoreEntryModel model)
@@ -93,17 +97,27 @@ namespace Test1
 			WWWForm form = new WWWForm();
 			form.AddField("content", bytesToSendBase64);
 			WWW www = new WWW(highscoreInsertUrl, form);
-			SendState = HighscoreState.Wait;
+			SendState = HighscoreTransmissionState.Wait;
 			yield return www;
 			
-			// show result
-			if (string.IsNullOrEmpty (www.error)) {
-				Debug.Log ("answer: " + www.text);
-				SendState = HighscoreState.Success;
-			} else {
-				Debug.Log ("Epic fail: " + www.error);
+			// process result
+			if (string.IsNullOrEmpty (www.error)) 
+			{
+				string serverResponseString = www.text;
+
+				var serverResponse = TryDeserializeServerResponse(serverResponseString);
+				if (serverResponse.State == ServerResponseState.Success)
+					SendState = HighscoreTransmissionState.Success;
+				else if (serverResponse.State == ServerResponseState.Warning)
+					SendState = HighscoreTransmissionState.Warning;
+				else SendState = HighscoreTransmissionState.Error;
+
+				LastMessage = serverResponse.Message;
+			} 
+			else 
+			{
 				LastPublishHttpError = "error: " + www.error;
-				SendState = HighscoreState.Failed;
+				SendState = HighscoreTransmissionState.Error;
 			}
 		}
 
@@ -130,7 +144,7 @@ namespace Test1
 		}
 
 		// deserialize received json string to highscore entry model (without email for security)
-		private void Deserialize(string json)
+		private void DeserializeModels(string json)
 		{
 			LastReceivedHighscoreEntries.Clear ();
 			List<object> objectsRaw = (List<object>)Json.Deserialize (json);
@@ -158,6 +172,33 @@ namespace Test1
 					LastReceivedHighscoreEntries.Add (highscoreEntry);
 				}
 			}
+		}
+
+		// try to deserialize server answer
+		private ServerResponse TryDeserializeServerResponse(string json)
+		{
+			var serverResponse = new ServerResponse();
+
+			try 
+			{ 
+				var response = (Dictionary<string,object>) Json.Deserialize(json);
+
+				serverResponse.Message = (string) response["message"];
+				string state = (string) response["state"];
+				if (state == "Success")
+					serverResponse.State = ServerResponseState.Success;
+				else if (state == "Warning")
+					serverResponse.State = ServerResponseState.Warning;
+				else
+					serverResponse.State = ServerResponseState.Error;
+			}
+			catch (System.NullReferenceException nullReferenceEx)
+			{
+				serverResponse.State = ServerResponseState.Error;
+				serverResponse.Message = "malformed response string";
+			}
+
+			return serverResponse;
 		}
 	}
 }

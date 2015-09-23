@@ -1,11 +1,13 @@
 <?php
+	include_once 'ResponseHelper.php';
+	
 	class Highscore
 	{	
 		// database connection
 		private $mysqli = null;
 	
-		// error message if another user entered the same displayName but a different Email
-		const ERROR_MESSAGE_DUPLICATE_DISPLAYNAME = 'This display name is already taken by another user. Please user another display name';
+		// warning message if another user entered the same displayName but a different Email
+		const WARNING_DUPLICATE_DISPLAYNAME = 'This display name is already taken by another user. Please user another display name';
 		
 		function __construct($databaseHost, $databaseUserName, $databaseUserPassword, $databaseName)
 		{
@@ -21,12 +23,12 @@
 			$this->mysqli->close();
 		}
 		
-		public function get($numberOfEntries) 
+		public function get() 
 		{
 			$json = null;
 							
 			// query and pack data
-			$query = "SELECT LastName, FirstName, DisplayName, Score FROM Highscore ORDER BY Score DESC LIMIT " . $numberOfEntries;
+			$query = "SELECT LastName, FirstName, DisplayName, Score FROM Highscore ORDER BY Score DESC";
 			if ($result = $this->mysqli->query($query)) 
 			{
 				$results = array();
@@ -67,10 +69,9 @@
 		public function insert($highscoreData)
 		{
 			// discard if invalid display name
-			$errorMessage = $this->isDisplayNameTaken($highscoreData);
-			if ($errorMessage != null)
-			{
-				die ($errorMessage);
+			$displayNameTaken = $this->isDisplayNameTaken($highscoreData);
+			if ($displayNameTaken) {
+				die (ResponseHelper::serializeResponse('Warning', $this::WARNING_DUPLICATE_DISPLAYNAME));
 			}
 			
 			// gracefully skip if duplicate
@@ -124,18 +125,9 @@
 			$statement->execute();
 			$statement->store_result();
 			$displayNameTaken = ($statement->num_rows() > 0);
-			echo 'debug :' . $statement->num_rows();
 			$statement->close(); 
 			
-			// fill result message
-			$resultMessage = null;
-			if ($displayNameTaken)
-			{
-				$resultMessage = $this::ERROR_MESSAGE_DUPLICATE_DISPLAYNAME;
-			}
-			
-			return $resultMessage;
-		}		
-		
+			return $displayNameTaken;
+		}	
 	}
 ?>

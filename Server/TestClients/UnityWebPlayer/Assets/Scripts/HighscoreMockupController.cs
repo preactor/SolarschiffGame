@@ -49,7 +49,7 @@ namespace Test1
 
 			// get receive message to display
 			string message = string.Empty;
-			if (highscore.ReceiveState == HighscoreState.Success) 
+			if (highscore.ReceiveState == HighscoreTransmissionState.Success) 
 			{
 				message = highscore.ToString (highscore.LastReceivedHighscoreEntries);
 			}
@@ -67,7 +67,7 @@ namespace Test1
 			firstNameToInsert = GUI.TextField (new Rect (520, 70, 200, 30), firstNameToInsert);
 			GUI.Label (new Rect (420, 120, 100, 30), "Last Name");
 			lastNameToInsert = GUI.TextField (new Rect (520, 120, 200, 30), lastNameToInsert);
-			GUI.Label (new Rect (420, 170, 100, 30), "Nickname");
+			GUI.Label (new Rect (420, 170, 100, 30), "Display Name");
 			displayNameToInsert = GUI.TextField (new Rect (520, 170, 200, 30), displayNameToInsert);
 			GUI.Label (new Rect (420, 220, 100, 30), "email");
 			emailToInsert = GUI.TextField (new Rect (520, 220, 200, 30), emailToInsert);
@@ -75,6 +75,7 @@ namespace Test1
 			scoreToInsert = GUI.TextField (new Rect (520, 270, 200, 30), scoreToInsert);
 
 			GUI.Label (new Rect(420, 320, 200, 30), "State: " + highscore.SendState.ToString());
+			GUI.Label (new Rect(420, 370, 400, 120), "Last Message: " + highscore.LastMessage);
 		}
 
 		// Use this for initialization
