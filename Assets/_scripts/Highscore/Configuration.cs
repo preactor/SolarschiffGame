@@ -19,7 +19,7 @@ public static class Configuration {
 #endif
 
 #if DEBUG
-	public static readonly byte [] PasswordBytes = new byte[]			// ADJUST THIS VALUE LOCALLY. DO NOT CHECKIN
+	public static readonly byte [] PasswordBytes = new byte[]			// This is only used when developing. It must not be adjusted when doploying
 	{
 		1, 2, 3, 4, 5, 6, 7, 8,
 		9, 10, 11, 12, 13, 14, 15, 16,
