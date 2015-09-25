@@ -1,5 +1,7 @@
 USE `solarschiff_dev`;
 
+delete from Highscore where 1 = 1;
+
 INSERT INTO `Highscore` (`Id`, `LastName`, `FirstName`, `DisplayName`, `Email`, `Score`, `ConfirmationStatus`) VALUES
 	(1, 'Mustermann', 'Hans', 'hansm85', 'hans@web.de', 1234, 0),
 	(2, 'Musterli', 'Peter', 'petermusterli83', 'm.peter@web.de', 2546, 0),

@@ -21,9 +21,8 @@
 			{
 				$res->databaseName = 'solarschiff_dev';				
 				$res->databaseUserName = 'solarschiff_dev';
-				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE		
-				$res->databaseHost = 'db4free.net';	
-				return $res;
+				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE
+				$res->databaseHost = 'db4free.net';				
 			}
 			else if (Configuration::$environnment == EnvironmentType::Production)
 			{
@@ -32,6 +31,9 @@
 				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE
 				$res->databaseHost = 'confidential';					// ADJUST VALUE
 			}
+			
+			// use persistent connection
+			$res->databaseHost = 'p:' . $res->databaseHost;
 			
 			return $res;
 		}
