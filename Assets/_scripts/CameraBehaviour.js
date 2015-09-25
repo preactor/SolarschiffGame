@@ -1,12 +1,16 @@
 #pragma strict
 
 var target : Transform;
+var camFocus : Transform;
 //var distance : float = 5;
 var shipVel : float;
 
 function Start () {
 
 	GetComponent.<Camera>().orthographicSize = 3.5;
+	transform.position.z = camFocus.position.z;
+	transform.position.y = camFocus.position.y;
+	transform.position.x = camFocus.position.x;
 
 }
 
@@ -63,31 +67,30 @@ function Update () {
 	// die vorigen Versuch obsolet macht. Dabei wird aus egal welcher Geschwindigkeit heraus Interpoliert. 
 	// die Maximalgeschwindigkeit der Interpolation ist 0.025. Sobald sich aber die orthoSize der shipVel-Rechnung annähert,
 	// ist sie praktisch dasselbe wie die Berechnung des zweiten Versuchs.
-	
-	if(Mathf.Abs(shipVel) <= 0.05 && GetComponent.<Camera>().orthographicSize >= 1.0){
-	
-		//Distance has become obsolete. Da Ortho-Perspektive macht das sowieso kein Sinn -> Dafür Clippingplanes anpassen
-		//Vorteil nun ist, dass ich die Rotation der Kamera einfacher beeinflussen kann, ohne dass das Schiff out of focus ist.
-		//transform.position.z = target.position.z - distance;
-		transform.position.z = target.position.z;
-		//transform.position.y = target.position.y + distance;
-		transform.position.y = target.position.y;
-		transform.position.x = target.position.x;
-		transform.rotation = Quaternion.Euler(35, 0, 0);
-	
-		GetComponent.<Camera>().orthographicSize = Mathf.Lerp(GetComponent.<Camera>().orthographicSize,1,0.001);
-	
-	}
-	
-	if(Mathf.Abs(shipVel) > 0.05){
-	
-		GetComponent.<Camera>().orthographicSize = Mathf.Lerp(GetComponent.<Camera>().orthographicSize,(0.9*Mathf.Abs(shipVel))+3.5,0.025);
-		//transform.position.z = target.position.z - distance;
-		transform.position.z = target.position.z;
-		//transform.position.y = target.position.y + distance;
-		transform.position.y = target.position.y;
-		transform.position.x = target.position.x;
-		transform.rotation = Quaternion.Euler(35, 0, 0);
+	if(Time.timeScale != 0.0){
+		if(Mathf.Abs(shipVel) <= 0.05 && GetComponent.<Camera>().orthographicSize >= 1.0){
 		
+			//Distance has become obsolete. Da Ortho-Perspektive macht das sowieso kein Sinn -> Dafür Clippingplanes anpassen
+			//Vorteil nun ist, dass ich die Rotation der Kamera einfacher beeinflussen kann, ohne dass das Schiff out of focus ist.
+			//transform.position.z = target.position.z - distance;
+			transform.position.z = camFocus.position.z;
+			//transform.position.y = target.position.y + distance;
+			transform.position.y = camFocus.position.y;
+			transform.position.x = camFocus.position.x;
+			transform.rotation = Quaternion.Euler(35, 0, 0);
+		
+			GetComponent.<Camera>().orthographicSize = Mathf.Lerp(GetComponent.<Camera>().orthographicSize,1,0.001);
+		}
+		
+		if(Mathf.Abs(shipVel) > 0.05){
+		
+			GetComponent.<Camera>().orthographicSize = Mathf.Lerp(GetComponent.<Camera>().orthographicSize,(0.9*Mathf.Abs(shipVel))+3.5,0.025);
+			//transform.position.z = target.position.z - distance;
+			transform.position.z = camFocus.position.z;
+			//transform.position.y = target.position.y + distance;
+			transform.position.y = camFocus.position.y;
+			transform.position.x = camFocus.position.x;
+			transform.rotation = Quaternion.Euler(35, 0, 0);	
+		}
 	}
 }

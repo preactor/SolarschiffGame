@@ -3,15 +3,15 @@
 var questStarted = false;
 var questAssigned = false;
 var questGiver : QuestGiver;
-var compass : arrowCompass;
+
 var gameRes : GameRessources;
 
 var questGiverObj : GameObject;
 var questGiverLocation : Transform;
 var questGiverLocObj : GameObject;
 
-
 var objectiveZone : GameObject;
+var destroyObjectiveZones : boolean;
 
 var QGoal1Rundfahrt1 : Transform;
 var QGoal1Rundfahrt2 : Transform;
@@ -41,26 +41,30 @@ var QSpwnHuenegg : Transform;
 var QSpwnSchadau : Transform;
 var QSpwnScherzli : Transform;
 
-
-
 var questType : String;
 var questTourist : GameObject;
 
+var compassGO : GameObject;
+//Script
 var questCompass : QuestCompass;
+var bubbleCompass : BubbleCompass;
 var newQuestTarget : GameObject;
+var bCompassAimer : BCompassAimer;
 
 var ship : Transform;
 
 //TimerValues
-
 var startTime : float;
-var randomvalue : float;
 
 
 
 function Start () {
 
-	questCompass.GetComponent.<Renderer>().enabled = false;
+	compassGO = GameObject.FindWithTag("questCompass");
+
+	compassGO.GetComponent.<UI.Image>().enabled = false;
+	
+	destroyObjectiveZones = false;
 
 }
 
@@ -70,8 +74,9 @@ function Update () {
 	//var script : ShipTest = gameObject.GetComponent(ShipTest);
 	//print(ShipTest);
 		
-	//if(script.questStarted == true){
+	//if(questStarted == true){
 	//	print("quest Started");
+	//	bubbleCompass.ziel = bubbleCompass.emptyTarget;
 	//}else{
 	//	print("quest Idle");
 	//}
@@ -83,38 +88,50 @@ function Update () {
 
 function IdletoQuest(){
 	
-	yield WaitForSeconds(6);
+	AssignEmptyTarget();
+	yield WaitForSeconds(10);
+	//=====================================
+	//Reset the destroyZones boolean, once it got called from the outside
+	if(destroyObjectiveZones == true){
+		destroyObjectiveZones = false;
+	}
 	if( questAssigned == false){
 		AssignQuest();
 	}
 }
 
+//Assign EmptyTarget to Compass between Missions
+function AssignEmptyTarget(){
+	questCompass.curTarget = questCompass.emptyTarget;
+	bubbleCompass.ziel = bubbleCompass.emptyTarget;
+	bCompassAimer.curTarget = bCompassAimer.emptyTarget;
+}
+
 function AssignQuest(){
-	
-	questAssigned = true;
-	
 	//Algorythm//
 	//Assigns a new Quest according to various Values like Reputation and Random numbers
 	//Defines what "Questgiver"(Buoy) will be used
 	//Algorythm//
-	
 	//Location gets defined after algorythm
 	
-	questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
-	questGiverLocation = questGiverLocObj.transform;
+	SpawnHikers();
 	
-	newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
 	
-	//Debug
-
-	//newQuestTarget = GameObject.FindWithTag("quest-debug");
 	
-	//Changing the QuestGiverTag after evaluating which Quest is appropriate
 	
-	newQuestTarget.tag = "quest-tourist";
-	questCompass.curTarget = newQuestTarget;
 	
-	//questCompass.Enabled();
+	//============================================
+	//Debug ======================================
+//		questAssigned = true;
+//		questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
+//		questGiverLocation = questGiverLocObj.transform;
+//		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
+//	
+//
+//	//newQuestTarget = GameObject.FindWithTag("quest-debug");
+//	//Changing the QuestGiverTag after evaluating which Quest is appropriate
+//		newQuestTarget.tag = "quest-tourist";
+//		questCompass.curTarget = newQuestTarget;
 }
 
 
@@ -122,32 +139,22 @@ function AssignQuest(){
 ///=============///
 
 
-function SpawnTourist(){
+function SpawnHikers(){
 
 	if(newQuestTarget != null){
 		questCompass.curTarget = questCompass.emptyTarget;
 		Destroy(newQuestTarget);
 	}
 	questAssigned = true;
+	questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
+	questGiverLocation = questGiverLocObj.transform;
 	
-	randomvalue = Random.value;
+	newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
+	newQuestTarget.tag = "quest-tourist";
 	
-	if(randomvalue > 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
-		questGiverLocation = questGiverLocObj.transform;
-	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-tourist";
-		questCompass.curTarget = newQuestTarget;
-	}
-	if(randomvalue < 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnSchadau");
-		questGiverLocation = questGiverLocObj.transform;
-	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-tourist2";
-		questCompass.curTarget = newQuestTarget;
-	}
+	questCompass.curTarget = newQuestTarget;
+	bubbleCompass.ziel = newQuestTarget;
+	bCompassAimer.curTarget = newQuestTarget;
 }
 
 function SpawnYouth(){
@@ -157,25 +164,16 @@ function SpawnYouth(){
 		Destroy(newQuestTarget);
 	}
 	questAssigned = true;
+	questGiverLocObj = GameObject.FindWithTag("QSpwnHuenegg");
+	questGiverLocation = questGiverLocObj.transform;
 	
-	randomvalue = Random.value;
+	newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
+	newQuestTarget.tag = "quest-youth";
 	
-	if(randomvalue > 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnScherzli");
-		questGiverLocation = questGiverLocObj.transform;
+	questCompass.curTarget = newQuestTarget;
+	bubbleCompass.ziel = newQuestTarget;
+	bCompassAimer.curTarget = newQuestTarget;
 	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-youth";
-		questCompass.curTarget = newQuestTarget;
-	}
-	if(randomvalue < 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnHuenegg");
-		questGiverLocation = questGiverLocObj.transform;
-	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-youth2";
-		questCompass.curTarget = newQuestTarget;
-	}
 }
 
 function SpawnRich(){
@@ -185,25 +183,16 @@ function SpawnRich(){
 		Destroy(newQuestTarget);
 	}
 	questAssigned = true;
+	questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
+	questGiverLocation = questGiverLocObj.transform;
 	
-	randomvalue = Random.value;
+	newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
+	newQuestTarget.tag = "quest-rich";
 	
-	if(randomvalue > 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnSchadau");
-		questGiverLocation = questGiverLocObj.transform;
+	questCompass.curTarget = newQuestTarget;
+	bubbleCompass.ziel = newQuestTarget;
+	bCompassAimer.curTarget = newQuestTarget;
 	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-rich";
-		questCompass.curTarget = newQuestTarget;
-	}
-	if(randomvalue < 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
-		questGiverLocation = questGiverLocObj.transform;
-	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-rich2";
-		questCompass.curTarget = newQuestTarget;
-	}
 }
 
 function SpawnFamily(){
@@ -213,33 +202,22 @@ function SpawnFamily(){
 		Destroy(newQuestTarget);
 	}
 	questAssigned = true;
+	questGiverLocObj = GameObject.FindWithTag("QSpwnGwatt");
+	questGiverLocation = questGiverLocObj.transform;
 	
-	randomvalue = Random.value;
+	newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
+	newQuestTarget.tag = "quest-family";
 	
-	if(randomvalue > 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnDampfschiff");
-		questGiverLocation = questGiverLocObj.transform;
+	questCompass.curTarget = newQuestTarget;
+	bubbleCompass.ziel = newQuestTarget;
+	bCompassAimer.curTarget = newQuestTarget;
 	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-family";
-		questCompass.curTarget = newQuestTarget;
-	}
-	if(randomvalue < 0.5){
-		questGiverLocObj = GameObject.FindWithTag("QSpwnGwatt");
-		questGiverLocation = questGiverLocObj.transform;
-	
-		newQuestTarget = Instantiate (questGiverObj,questGiverLocation.position,questGiverLocation.rotation);
-		newQuestTarget.tag = "quest-family2";
-		questCompass.curTarget = newQuestTarget;
-	}
 }
 
 
 
 /// QUESTELEMENTS ///
 ///===============///
-
-
 
 function QuestRich(){
 
@@ -249,25 +227,8 @@ function QuestRich(){
 		print("Rich-Quest started!");
 		//randomvalue = Random.value;
 		//print(randomvalue);
-		questType = "quest-rich";
-		gameRes.questID = questType;
 		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
-	}
-}
-
-function QuestRich2(){
-
-	//Exact Timing - driving on normal Speeds - reaching all the zones
-	
-	if(questStarted == false){
-		print("Rich-Quest2 started!");
-		//randomvalue = Random.value;
-		//print(randomvalue);
-		questType = "quest-rich2";
-		gameRes.questID = questType;
-		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
+		gameRes.ShowBriefing("quest-rich");
 	}
 }
 
@@ -279,25 +240,8 @@ function QuestYouth(){
 		print("Youth-Quest started!");
 		//randomvalue = Random.value;
 		//print(randomvalue);
-		questType = "quest-youth";
-		gameRes.questID = questType;
 		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
-	}
-}
-
-function QuestYouth2(){
-
-	//Some Action - minimum of x (maybe 2) SolarBoosts - Drifting
-	
-	if(questStarted == false){
-		print("Youth-Quest2 started!");
-		//randomvalue = Random.value;
-		//print(randomvalue);
-		questType = "quest-youth2";
-		gameRes.questID = questType;
-		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
+		gameRes.ShowBriefing("quest-youth");
 	}
 }
 
@@ -309,25 +253,32 @@ function QuestFamily(){
 		print("Family-Quest started!");
 		//randomvalue = Random.value;
 		//print(randomvalue);
-		questType = "quest-family";
-		gameRes.questID = questType;
+		questStarted = true;
 		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
-	}
-}
+		gameRes.ShowBriefing("quest-family");
 
-function QuestFamily2(){
-
-	//Barbeque-Party - Drive to the designated Zone and try to keep the ship as stable as Possible (incoming Wavebumps which have to be crossed 90° e.g.)
-	
-	if(questStarted == false){
-		print("Family-Quest2 started!");
-		//randomvalue = Random.value;
-		//print(randomvalue);
-		questType = "quest-family2";
-		gameRes.questID = questType;
-		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
+		
+		var ObjZone1 = Instantiate (objectiveZone, QGoal2Rundfahrt1.position, transform.rotation);
+		ObjZone1.tag = "ObjZone1";
+		var ObjZone2 = Instantiate (objectiveZone, QGoal2Rundfahrt2.position, transform.rotation);
+		ObjZone2.tag = "ObjZone2";
+		var ObjZone3 = Instantiate (objectiveZone, QGoal2Rundfahrt3.position, transform.rotation);
+		ObjZone3.tag = "ObjZone3";
+		var ObjZone4 = Instantiate (objectiveZone, QGoal2Rundfahrt4.position, transform.rotation);
+		ObjZone4.tag = "ObjZone4";
+		var ObjZone5 = Instantiate (objectiveZone, QGoal2Rundfahrt5.position, transform.rotation);
+		ObjZone5.tag = "ObjZone5";
+		var ObjZone6 = Instantiate (objectiveZone, QGoal2Rundfahrt6.position, transform.rotation);
+		ObjZone6.tag = "ObjZone6";
+		var ObjZone7 = Instantiate (objectiveZone, QGoal2Rundfahrt7.position, transform.rotation);
+		ObjZone7.tag = "ObjZone7";
+		var ObjZone8 = Instantiate (objectiveZone, QSpwnSchadau.position, transform.rotation);
+		ObjZone8.tag = "ObjZone8";
+		
+		Instantiate (questTourist, transform.position, transform.rotation);	
+		gameRes.questStatusTxt = "Quest Started! Get to the end in time!";	
+		gameRes.EnableTimer();
+		startTime = 90;	
 	}
 }
 
@@ -339,12 +290,9 @@ function QuestTourist(){
 		print("Tourist-Quest started!");
 		//randomvalue = Random.value;
 		//print(randomvalue);
-		questType = "quest-tourist";
-		gameRes.questID = questType;
-		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
-		
 		questStarted = true;
+		yield WaitForSeconds (0.2);
+		gameRes.ShowBriefing("quest-hikers");
 		
 		var ObjZone1 = Instantiate (objectiveZone, QGoal1Rundfahrt1.position, transform.rotation);
 		ObjZone1.tag = "ObjZone1";
@@ -372,41 +320,6 @@ function QuestTourist(){
 	}
 }
 
-function QuestTourist2(){
-
-	if(questStarted == false){
-		print("Tourist-Quest2 started!");
-		questType = "quest-tourist2";
-		gameRes.questID = questType;
-		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
-		
-		questStarted = true;
-		
-		var ObjZone1 = Instantiate (objectiveZone, QGoal2Rundfahrt1.position, transform.rotation);
-		ObjZone1.tag = "ObjZone1";
-		var ObjZone2 = Instantiate (objectiveZone, QGoal2Rundfahrt2.position, transform.rotation);
-		ObjZone2.tag = "ObjZone2";
-		var ObjZone3 = Instantiate (objectiveZone, QGoal2Rundfahrt3.position, transform.rotation);
-		ObjZone3.tag = "ObjZone3";
-		var ObjZone4 = Instantiate (objectiveZone, QGoal2Rundfahrt4.position, transform.rotation);
-		ObjZone4.tag = "ObjZone4";
-		var ObjZone5 = Instantiate (objectiveZone, QGoal2Rundfahrt5.position, transform.rotation);
-		ObjZone5.tag = "ObjZone5";
-		var ObjZone6 = Instantiate (objectiveZone, QGoal2Rundfahrt6.position, transform.rotation);
-		ObjZone6.tag = "ObjZone6";
-		var ObjZone7 = Instantiate (objectiveZone, QGoal2Rundfahrt7.position, transform.rotation);
-		ObjZone7.tag = "ObjZone7";
-		var ObjZone8 = Instantiate (objectiveZone, QSpwnSchadau.position, transform.rotation);
-		ObjZone8.tag = "ObjZone8";
-		
-		Instantiate (questTourist, transform.position, transform.rotation);	
-		gameRes.questStatusTxt = "Quest Started! Get to the end in time!";	
-		gameRes.EnableTimer();
-		startTime = 90;	
-	}
-}
-
 //NEW TYPE OF QUEST? Rettungsmission, entweder direkt auf dem See startbar oder an Land
 
 function QuestDebug (){
@@ -419,10 +332,8 @@ function QuestDebug (){
 		questStarted = true;
 		//compass.colChecker = true;
 		//compass.nextTarget();
-		questType = "quest-debug";
-		gameRes.questID = questType;
 		yield WaitForSeconds (0.2);
-		gameRes.showBriefing = true;
+		gameRes.ShowBriefing("quest-debug");
 	}	
 }
 

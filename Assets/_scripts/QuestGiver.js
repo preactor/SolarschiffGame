@@ -2,27 +2,53 @@
 
 var ship : Transform;
 var shipObj : GameObject;
+var shipControl : ShipTest;
 var questGiverenabled = false;
-var questGiverenabledMat : Material;
-var questGiverdisabledMat : Material;
 var gameResObj : GameObject;
 var questFunc : QuestFunc;
 
 var questID : String;
+var hikers : GameObject;
+var youth : GameObject;
+var rich : GameObject;
+var family : GameObject;
 
+var childRenderers : Renderer[];
+
+var redColor : Color;
+var greenColor : Color;
 
 
 function Start () {
 
 	questID = gameObject.tag;
 	shipObj = GameObject.FindWithTag("ship");
-	
+	shipControl = shipObj.GetComponent(ShipTest);
 	ship = shipObj.transform;
 	
 	gameResObj = GameObject.FindWithTag("GameRes");
 	questFunc = gameResObj.GetComponent(QuestFunc);
 	
+	if(questID == "quest-rich"){
+		rich.SetActive(true);
+	}
+	if(questID == "quest-youth"){
+		youth.SetActive(true);
+	}
+	if(questID == "quest-family"){
+		family.SetActive(true);
+	}	
+	if(questID == "quest-tourist"){
+		hikers.SetActive(true);
+	}
+	
+	childRenderers = this.transform.FindChild("ZoneCircleFinal").gameObject.GetComponentsInChildren.<Renderer>();
+	for(var children : Renderer in childRenderers){
+		children.material.SetColor("_Color", redColor);
+	}
+	
 	//print(questID);	
+	
 }
 
 
@@ -32,40 +58,32 @@ function Update () {
 	//print(distance);
 	
 	if(distance < 2){
-		GetComponent.<Renderer>().material = questGiverenabledMat;
+		for(var children : Renderer in childRenderers){
+			children.material.SetColor("_Color", greenColor);
+		}
 		questGiverenabled = true;
 	}else{
-		GetComponent.<Renderer>().material = questGiverdisabledMat;
+		for(var children : Renderer in childRenderers){
+			children.material.SetColor("_Color", redColor);
+		}
 		questGiverenabled = false;
 	}
 	
-	if(Input.GetKeyDown("space") && questGiverenabled == true){
+	if(shipControl.shipVelocity < 0.05 && questGiverenabled == true){
 	
 		questID = gameObject.tag;
 	
 		if(questID == "quest-rich"){
 			questFunc.QuestRich();
 		}
-		if(questID == "quest-rich2"){
-			questFunc.QuestRich2();
-		}
 		if(questID == "quest-youth"){
 			questFunc.QuestYouth();
-		}
-		if(questID == "quest-youth2"){
-			questFunc.QuestYouth2();
 		}
 		if(questID == "quest-family"){
 			questFunc.QuestFamily();
 		}	
-		if(questID == "quest-family2"){
-			questFunc.QuestFamily2();
-		}	
 		if(questID == "quest-tourist"){
 			questFunc.QuestTourist();
-		}
-		if(questID == "quest-tourist2"){
-			questFunc.QuestTourist2();
 		}
 		if(questID == "quest-debug"){
 			questFunc.QuestDebug();

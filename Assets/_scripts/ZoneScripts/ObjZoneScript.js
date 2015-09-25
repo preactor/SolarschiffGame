@@ -1,8 +1,4 @@
 ﻿#pragma strict
-
-var red : Material;
-var green : Material;
-
 var questType : String;
 var questFunc : QuestFunc;
 var gameRes : GameRessources;
@@ -10,6 +6,15 @@ var questCompass : QuestCompass;
 var questTourist : QuestTourist;
 
 var finished = false;
+
+var zoneChild : GameObject;
+var childRenderers : Renderer[];
+var zoneHit : boolean;
+
+//Colors
+
+var redColor : Color;
+var greenColor : Color;
 
 
 function Start () {
@@ -21,18 +26,27 @@ function Start () {
 	
 	questType = questFunc.questType;
 	
-	this.GetComponent.<Renderer>().enabled = false;
-	this.GetComponent.<Renderer>().material = red;
+	zoneHit = false;
+	
+	zoneChild = this.transform.Find("ZoneCircleFinal").gameObject;
+	childRenderers = zoneChild.GetComponentsInChildren.<Renderer>();
+	
+	for(var children : Renderer in childRenderers){
+		children.enabled = true;
+		children.material.SetColor("_Color", redColor);
+	}
 
 }
 
 function Update () {
 
-	if(this.gameObject == questCompass.curTarget || this.GetComponent.<Renderer>().material == green){
-		this.GetComponent.<Renderer>().enabled = true;
+	if(this.gameObject == questCompass.curTarget || zoneHit == true){
+		for(var children : Renderer in childRenderers){
+			children.enabled = true;
+		}
 	}
 
-	if(questTourist.destroyZones == true){
+	if(questFunc.destroyObjectiveZones == true){
 		Destroy(this.gameObject);
 	}
 }
@@ -40,7 +54,11 @@ function Update () {
 function OnTriggerEnter ( col : Collider ){
 
 	if(col.tag == "ship" && this.gameObject == questCompass.curTarget){
-		this.GetComponent.<Renderer>().material = green;
+		for(var children : Renderer in childRenderers){
+			children.enabled = true;
+			children.material.SetColor("_Color", greenColor);
+		}
+		zoneHit = true;
 		questTourist.nextZone();
 	}
 	if(col.tag == "ship" && this.gameObject.tag == "ObjZone8" ){

@@ -4,8 +4,8 @@
 
 var accel : float = 60;
 var accelfriction : float = 0.99;
-var rotationSpeed : float = 5;
-var rotfriction : float = 0.99;
+var rotationSpeed : float = 10;
+var rotfriction : float = 0.5;
 
 
 var questGiver : QuestGiver;
