@@ -7,9 +7,21 @@ using System.Text;
 using System.Security.Cryptography;
 using MiniJSON;
 
-public enum HighscoreState
+public enum HighscoreTransmissionState
 {
-	Idle, Wait, Success, Failed
+	Idle, Wait, Success, Warning, Error
+}
+
+public enum ServerResponseState
+{
+	Success, Warning, Error
+}
+
+class ServerResponse
+{
+	public ServerResponseState State;
+
+	public string Message;
 }
 
 public class Highscore {
@@ -21,11 +33,14 @@ public class Highscore {
 	public string LastPublishHttpError = null;
 
 	// currently sending highscore
-	public HighscoreState SendState = HighscoreState.Idle;
+	public HighscoreTransmissionState SendState = HighscoreTransmissionState.Idle;
 
 	// currently receiving highscore
-	public HighscoreState ReceiveState = HighscoreState.Idle;
-	
+	public HighscoreTransmissionState ReceiveState = HighscoreTransmissionState.Idle;
+
+	// last highscore message
+	public string LastMessage = string.Empty;
+
 	// last highscore list received from php script
 	public List<HighscoreEntryModel> LastReceivedHighscoreEntries = new List<HighscoreEntryModel>();
 
@@ -43,24 +58,22 @@ public class Highscore {
 	{	 
 		// request data
 		WWW www = new WWW(highscoreGetUrl);
-		ReceiveState = HighscoreState.Wait;
+		ReceiveState = HighscoreTransmissionState.Wait;
 		yield return www;
 
 		// get json response
 		string json = null;
 		LastGetHttpError = null;
 		if (string.IsNullOrEmpty (www.error)) {
-			Debug.Log ("answer: " + www.text);
 			json = www.text;
-			ReceiveState = HighscoreState.Success;
+			ReceiveState = HighscoreTransmissionState.Success;
 		} else {
-			Debug.Log ("Epic fail: " + www.error);
 			LastGetHttpError = "error: " + www.error;
-			ReceiveState = HighscoreState.Failed;
+			ReceiveState = HighscoreTransmissionState.Error;
 		}
 
 		// deserialize json response
-		Deserialize (json);
+		DeserializeModels (json);
 	}
 
 	public IEnumerator PublishEntry(HighscoreEntryModel model)
@@ -82,17 +95,27 @@ public class Highscore {
 		WWWForm form = new WWWForm();
 		form.AddField("content", bytesToSendBase64);
 		WWW www = new WWW(highscoreInsertUrl, form);
-		SendState = HighscoreState.Wait;
+		SendState = HighscoreTransmissionState.Wait;
 		yield return www;
 		
-		// show result
-		if (string.IsNullOrEmpty (www.error)) {
-			Debug.Log ("answer: " + www.text);
-			SendState = HighscoreState.Success;
-		} else {
-			Debug.Log ("Epic fail: " + www.error);
+		// process result
+		if (string.IsNullOrEmpty (www.error)) 
+		{
+			string serverResponseString = www.text;
+
+			var serverResponse = TryDeserializeServerResponse(serverResponseString);
+			if (serverResponse.State == ServerResponseState.Success)
+				SendState = HighscoreTransmissionState.Success;
+			else if (serverResponse.State == ServerResponseState.Warning)
+				SendState = HighscoreTransmissionState.Warning;
+			else SendState = HighscoreTransmissionState.Error;
+
+			LastMessage = serverResponse.Message;
+		} 
+		else 
+		{
 			LastPublishHttpError = "error: " + www.error;
-			SendState = HighscoreState.Failed;
+			SendState = HighscoreTransmissionState.Error;
 		}
 	}
 
@@ -113,13 +136,13 @@ public class Highscore {
 	private string Serialize(HighscoreEntryModel model)
 	{
 		string json = string.Format("{{\"LastName\": \"{0}\", \"FirstName\": \"{1}\" , \"DisplayName\": \"{2}\", \"Email\": \"{3}\", \"Score\": {4}}}", 
-									model.LastName, model.FirstName, model.DisplayName, model.Email, model.Score.ToString());
+		                            model.LastName, model.FirstName, model.DisplayName, model.Email, model.Score.ToString());
 		
 		return json;
 	}
 
 	// deserialize received json string to highscore entry model (without email for security)
-	private void Deserialize(string json)
+	private void DeserializeModels(string json)
 	{
 		LastReceivedHighscoreEntries.Clear ();
 		List<object> objectsRaw = (List<object>)Json.Deserialize (json);
@@ -148,5 +171,31 @@ public class Highscore {
 			}
 		}
 	}
-}
 
+	// try to deserialize server answer
+	private ServerResponse TryDeserializeServerResponse(string json)
+	{
+		var serverResponse = new ServerResponse();
+
+		try 
+		{ 
+			var response = (Dictionary<string,object>) Json.Deserialize(json);
+
+			serverResponse.Message = (string) response["message"];
+			string state = (string) response["state"];
+			if (state == "Success")
+				serverResponse.State = ServerResponseState.Success;
+			else if (state == "Warning")
+				serverResponse.State = ServerResponseState.Warning;
+			else
+				serverResponse.State = ServerResponseState.Error;
+		}
+		catch (System.NullReferenceException nullReferenceEx)
+		{
+			serverResponse.State = ServerResponseState.Error;
+			serverResponse.Message = "malformed response string";
+		}
+
+		return serverResponse;
+	}
+}

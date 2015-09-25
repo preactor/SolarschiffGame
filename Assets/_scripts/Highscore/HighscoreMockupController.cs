@@ -53,7 +53,7 @@ public class HighscoreMockupController : MonoBehaviour {
 		}
 		// get receive message to display
 		string message = string.Empty;
-		if (highscore.ReceiveState == HighscoreState.Success) {
+		if (highscore.ReceiveState == HighscoreTransmissionState.Success) {
 			message = highscore.ToString (highscore.LastReceivedHighscoreEntries);
 		}
 		else
@@ -73,7 +73,10 @@ public class HighscoreMockupController : MonoBehaviour {
 		emailToInsert = GUI.TextField (new Rect (520, 220, 200, 30), emailToInsert);
 		GUI.Label (new Rect (420, 270, 100, 30), "score");
 		scoreToInsert = GUI.TextField (new Rect (520, 270, 200, 30), scoreToInsert);
+		
 		GUI.Label (new Rect (420, 320, 200, 30), "State: " + highscore.SendState.ToString ());
+		GUI.Label (new Rect(420, 370, 400, 120), "Last Message: " + highscore.LastMessage);
+		
 	}
 
 	// Use this for initialization
