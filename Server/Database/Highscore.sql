@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `solarschiff_dev`
+CREATE DATABASE IF NOT EXISTS `solarschiff_dev`;
 USE `solarschiff_dev`;
 
 CREATE TABLE `Highscore` (
