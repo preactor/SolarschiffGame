@@ -52,15 +52,20 @@ public class HighscoreMockupController : MonoBehaviour {
 			StartCoroutine (highscore.PublishEntry (model));
 		}
 		// get receive message to display
-		string message = string.Empty;
+		string messageText = string.Empty;
 		if (highscore.ReceiveState == HighscoreTransmissionState.Success) {
-			message = highscore.ToString (highscore.LastReceivedHighscoreEntries);
+			var entries = highscore.LastReceivedHighscoreEntries;
+			foreach (HighscoreEntryModel entry in entries) 
+			{
+				var line = string.Format("{0} {1} ({2} {3})\n", entry.Score, entry.DisplayName, entry.FirstName, entry.LastName);
+				messageText = messageText + line;
+			}
 		}
 		else
-			message = highscore.ReceiveState.ToString ();
+			messageText = highscore.ReceiveState.ToString ();
 		// show scroll highscore scroll view
 		scrollViewVector = GUI.BeginScrollView (new Rect (10, 70, 400, 400), scrollViewVector, new Rect (0, 0, 1000, 100));
-		GUI.TextArea (new Rect (0, 0, 400, 400), message);
+		GUI.TextArea (new Rect (0, 0, 400, 400), messageText);
 		GUI.EndScrollView ();
 		// show input fields
 		GUI.Label (new Rect (420, 70, 100, 30), "First Name");

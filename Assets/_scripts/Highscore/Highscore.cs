@@ -119,19 +119,6 @@ public class Highscore {
 		}
 	}
 
-	// get formatted string from HighscoreEntry models
-	public string ToString(List<HighscoreEntryModel> entries)
-	{
-		var result = string.Empty;
-		foreach (var entry in entries) 
-		{
-			var line = string.Format("{0} {1} ({2} {3})\n", entry.Score, entry.DisplayName, entry.FirstName, entry.LastName);
-			result = result + line;
-		}
-		
-		return result;
-	}
-
 	// serialize a highscore entry model to json
 	private string Serialize(HighscoreEntryModel model)
 	{
