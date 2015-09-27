@@ -10,6 +10,9 @@
 
 ## Productive Installation 
 
+### Database installation
+2. Execute the script ./SolarschiffGame/Server/Database/HighscoreProduction.sql on the MySQL server to create the database and the highscore table
+
 ### Server deployment
 1. Open the file ./SolarschiffGame/Server/ServerScripts/Configuration.php 
 2. Set the variable $environment to EnvironmentType::Production

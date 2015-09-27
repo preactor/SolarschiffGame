@@ -26,7 +26,7 @@
 			}
 			else if (Configuration::$environnment == EnvironmentType::Production)
 			{
-				$res->databaseName = 'confidential';					// ADJUST VALUE
+				$res->databaseName = 'solarschiff';						
 				$res->databaseUserName = 'confidential';				// ADJUST VALUE
 				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE
 				$res->databaseHost = 'confidential';					// ADJUST VALUE
