@@ -1,4 +1,4 @@
-USE `solarschiff_dev`;
+USE `solarschiff`;
 
 delete from Highscore where 1 = 1;
 

@@ -1,0 +1,37 @@
+151022 22:01:44 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3311  MySQL Community Edition (GPL)
+151022 22:01:44 [ERROR] mysqld: Got error 10038 from select
+151022 22:04:22 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3311  MySQL Community Edition (GPL)
+151022 22:06:08 [Note] \bin\mysqld-opt.exe: Normal shutdown
+
+151022 22:06:09 [Note] \bin\mysqld-opt.exe: Shutdown complete
+
+151022 22:08:01 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3311  MySQL Community Edition (GPL)
+151022 22:08:14 [Note] \bin\mysqld-opt.exe: Normal shutdown
+
+151022 22:08:14 [Note] \bin\mysqld-opt.exe: Shutdown complete
+
+151022 22:30:40 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3311  MySQL Community Edition (GPL)
+151022 22:32:22 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3311  MySQL Community Edition (GPL)
+151022 22:41:05 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3306  MySQL Community Edition (GPL)
+151022 22:41:42 [Note] \bin\mysqld-opt.exe: Normal shutdown
+
+151022 22:41:42 [Note] \bin\mysqld-opt.exe: Shutdown complete
+
+151022 22:44:19 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3306  MySQL Community Edition (GPL)
+151022 22:44:35 [Note] \bin\mysqld-opt.exe: Normal shutdown
+
+151022 22:44:35 [Note] \bin\mysqld-opt.exe: Shutdown complete
+
+151022 22:45:24 [Note] \bin\mysqld-opt.exe: ready for connections.
+Version: '5.0.67-community-nt'  socket: ''  port: 3306  MySQL Community Edition (GPL)
+151022 22:49:34 [Note] \bin\mysqld-opt.exe: Normal shutdown
+
+151022 22:49:34 [Note] \bin\mysqld-opt.exe: Shutdown complete
+

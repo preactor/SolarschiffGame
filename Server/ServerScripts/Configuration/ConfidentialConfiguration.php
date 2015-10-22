@@ -1,5 +1,5 @@
 <?php
-	/* COPY THIS FILE LOCALLY TO ConfidentialConfiguration.php AND ADJUST THE VALUES IN THE COPY LOCALLY */
+	/* DO NEVER COMMIT THIS FILE. THIS FILE MUST ONLY BE MODIFIED LOCALLY DURING PRODUCTIVE INSTALLATION */
 	
 	include_once ('Configuration.php');
 	
@@ -19,14 +19,14 @@
 			
 			if (Configuration::$environment == EnvironmentType::Test)
 			{
-				$res->databaseName = 'solarschiff_dev';				
-				$res->databaseUserName = 'solarschiff_dev';
-				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE
-				$res->databaseHost = 'db4free.net';				
+				$res->databaseName = 'solarschiff';				
+				$res->databaseUserName = 'root';
+				$res->databaseUserPassword = 'root';		
+				$res->databaseHost = 'localhost';				
 			}
 			else if (Configuration::$environnment == EnvironmentType::Production)
 			{
-				$res->databaseName = 'solarschiff';						
+				$res->databaseName = 'confidential';					// ADJUST VALUE
 				$res->databaseUserName = 'confidential';				// ADJUST VALUE
 				$res->databaseUserPassword = 'confidential';			// ADJUST VALUE
 				$res->databaseHost = 'confidential';					// ADJUST VALUE

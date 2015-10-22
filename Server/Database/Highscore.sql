@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `solarschiff_dev`;
-USE `solarschiff_dev`;
+CREATE DATABASE IF NOT EXISTS `solarschiff`;
+USE `solarschiff`;
 
 CREATE TABLE `Highscore` (
 	`Id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
